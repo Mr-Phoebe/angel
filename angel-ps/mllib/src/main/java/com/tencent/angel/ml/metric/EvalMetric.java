@@ -14,13 +14,36 @@
  * the License.
  *
  */
-package com.tencent.angel.ml.tree;
+package com.tencent.angel.ml.metric;
 
-import com.tencent.angel.ml.RegTree.RegTDataStore;
+/**
+ * Description: interface of evaluation metric used to evaluate model performance. This has nothing
+ * to do with training, but merely act as evaluation purpose.
+ */
+public interface EvalMetric {
 
+  /**
+   * return name of metric
+   *
+   * @return the name
+   */
+  String getName();
 
-public abstract class TSplitValueHelper {
+  /**
+   * evaluate a specific metric for instances
+   *
+   * @param preds the predictions
+   * @param labels the labels
+   * @return the eval metric
+   */
+  float eval(float[] preds, float[] labels);
 
-  static float[][] getSplitValue(RegTDataStore regTDataStore, int splitNum) { return new float[0][]; }
-
+  /**
+   * evaluate a specific metric for one instance
+   *
+   * @param pred the prediction
+   * @param label the label
+   * @return the eval metric
+   */
+  float evalOne(float pred, float label);
 }

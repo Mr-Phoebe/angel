@@ -17,10 +17,11 @@
 package com.tencent.angel.ml.metric;
 
 /**
- * Description: the metric of logistic loss
+ * Description: the metric of logistic error
+ *
  */
 
-public class LogLossMetric implements EvalMetric {
+public class LogErrorMetric implements EvalMetric {
 
   /**
    * return name of metric
@@ -29,43 +30,35 @@ public class LogLossMetric implements EvalMetric {
    */
   @Override
   public String getName() {
-    return "logloss";
+    return "logerror";
   }
 
   /**
    * evaluate a specific metric for instances
    *
-   * @param predProbs the probability predictions
+   * @param preds the predictions
    * @param labels the labels
    * @return the eval metric
    */
   @Override
-  public float eval(float[] predProbs, float[] labels) {
+  public float eval(float[] preds, float[] labels) {
     float errSum = 0.0f;
-    for (int i = 0; i < predProbs.length; i++) {
-      errSum += evalOne(predProbs[i], labels[i]);
+    for (int i = 0; i < preds.length; i++) {
+      errSum += evalOne(preds[i], labels[i]);
     }
-    return errSum / predProbs.length;
+    return errSum / preds.length;
   }
 
   /**
    * evaluate a specific metric for one instance
    *
-   * @param predProb the probability prediction
+   * @param pred the prediction
    * @param label the label
    * @return the eval metric
    */
   @Override
-  public float evalOne(float predProb, float label) {
-    float eps = 1e-16f;
-    float pneg = 1.0f - predProb;
-    if (predProb < eps) {
-      return -label * (float) Math.log(eps) - (1.0f - label) * (float) Math.log(1.0f - eps);
-    } else if (pneg < eps) {
-      return -label * (float) Math.log(1.0f - eps) - (1.0f - label) * (float) Math.log(eps);
-    } else {
-      return -label * (float) Math.log(predProb) - (1.0f - label) * (float) Math.log(pneg);
-    }
+  public float evalOne(float pred, float label) {
+    return pred > 0f ? 1.0f - label : label;
   }
 
 
